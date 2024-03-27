@@ -16,7 +16,8 @@ const videoSchema = new Schema({
         trim: true,
         unique: true
     }
-},{
+},
+{
     versionKey : false,
     timestamps: true
 });
