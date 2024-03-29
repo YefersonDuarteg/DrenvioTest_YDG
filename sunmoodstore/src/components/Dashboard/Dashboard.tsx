@@ -5,8 +5,8 @@ import * as customerService from '../../services/CustomerService'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBox, faBoxesPacking, faPerson } from '@fortawesome/free-solid-svg-icons'
 import Dahscards from './Dahscards'
-import Modal from './Modal';
-import Modal from 'react-bootstrap/Modal';
+// import Modal from './Modal';
+// import Modal from 'react-bootstrap/Modal';
 import '../../css/dashboard.css'
 import '../../css/themify-icons.css'
 import '../../css/linearicons.css'
@@ -67,7 +67,7 @@ const Dashboard = () => {
         <div>
             <div className="banner-initial card container p-5">
                 <div className="px-5">
-                <Modal isOpen={isModalOpen} onClose={handleCloseModal} data={data} />
+                {/* <Modal isOpen={isModalOpen} onClose={handleCloseModal} data={data} /> */}
                     <div className="row">
                         <button onClick={handleOpenModal}>Abrir Modal</button>
                         <Dahscards icon={faBox} backgroundColor="sbg1" title="Total Models Products" value={totalProducts}/>
