@@ -1,6 +1,6 @@
 import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react'
-import { Video } from "./Video";
-import * as videoService from './VideoService'
+import { Video } from "../../interfaces/intServices/Video";
+import * as videoService from '../../services/VideoService'
 import {toast} from 'react-toastify';
 import {useNavigate, useParams } from 'react-router-dom'
 

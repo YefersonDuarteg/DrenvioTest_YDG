@@ -19,6 +19,23 @@ const serviceGetProducts = async () =>{
     return products
 }
 
+const serviceGetTotalProducts = async () =>{
+    const products = await Product.find()
+
+    for (const product of products) {
+        const brand = await Brand.findById(product.brand_id);
+        if (brand) {
+            product.brand = brand.name;
+        }
+        const category = await Category.findById(product.category_id);
+        if (category) {
+            product.category = category.name;
+        }
+    }
+    
+    return products
+}
+
 const serviceGetProduct = async (id : string) =>{
     const product =  await Product.findById(id)
     return product
@@ -29,5 +46,5 @@ const serviceGetProduct = async (id : string) =>{
 //     return "Duarte"
 // }
 
-export { serviceGetProducts, serviceGetProduct}
+export { serviceGetProducts, serviceGetProduct, serviceGetTotalProducts}
 

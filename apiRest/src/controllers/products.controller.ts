@@ -12,6 +12,15 @@ const getProducts: RequestHandler = async (req, res) => {
     }
 }
 
+const getTotalProducts: RequestHandler = async (req, res) => {
+    try {
+        const products = await services.serviceGetTotalProducts()
+        return res.json(products)
+    } catch (error) {
+        res.json(error)
+    }
+}
+
 const getProduct: RequestHandler = async (req, res) => {
     try {
         const productFound = await services.serviceGetProduct(req.params.id)
@@ -53,4 +62,4 @@ const deleteProduct: RequestHandler = async (req, res) => {
     }
 }
 
-export { getProducts, getProduct, createProduct, updateProduct, deleteProduct }
+export { getProducts, getProduct, createProduct, updateProduct, deleteProduct,getTotalProducts }

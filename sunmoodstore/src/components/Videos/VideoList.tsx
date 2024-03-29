@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import {Video} from './Video'
-import * as videoService from './VideoService'
+import {Video} from '../../interfaces/intServices/Video'
+import * as videoService from '../../services/VideoService'
 import VideoItem from './VideoItem'
 
 const VideoList = () => {

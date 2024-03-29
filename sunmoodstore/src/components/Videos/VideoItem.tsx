@@ -1,9 +1,9 @@
 import React from 'react'
-import { Video } from './Video'
+import { Video } from '../../interfaces/intServices/Video'
 import ReactPlayer from 'react-player'
-import './videoItem.css'
+import '../../css/videoItem.css'
 import {useNavigate } from 'react-router-dom'
-import * as videoService from './VideoService'
+import * as videoService from '../../services/VideoService'
 
 interface Props {
 	video: Video,
