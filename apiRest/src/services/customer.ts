@@ -32,8 +32,8 @@ const serviceGetSpecialpricing = async (user_id : string, nombre_producto : stri
                 if(specialPrecie.brand_id == product.brand_id){
                     const brand = await Brand.findById(specialPrecie.brand_id)
                     if(brand){
-                        product.percentageSpecialPrice = brand.percentageSpecialPrice
-                        product.specialPrice = await product.price - (product.price * brand.percentageSpecialPrice / 100);
+                        product.percentageSpecialPrice = brand.percentageSpecialPrice.toString() + "%"
+                        product.specialPrice = await (product.price - (product.price * brand.percentageSpecialPrice / 100));
                         product.brand = brand.name;
                         return product
                     }

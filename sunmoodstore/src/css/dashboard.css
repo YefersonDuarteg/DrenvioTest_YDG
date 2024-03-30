@@ -19,14 +19,6 @@
     background: linear-gradient(31deg, rgb(254, 208, 63) 0%, rgb(230, 190, 63) 110%);
 }
 
-.target-sbg :hover {
-    transition: all 0.2s ease-out;
-    /* box-shadow: 0px 4px 8px rgba(38, 38, 38, 0.2); */
-    top: -4px;
-    /* border: 1px solid #ccc;
-    background-color: white; */
-}
-
 .bg-nav1 {
     --bs-bg-opacity: 1;
     background-color: rgb(60 157 255) !important;

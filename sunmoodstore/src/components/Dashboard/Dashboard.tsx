@@ -1,322 +1,127 @@
 import React, { useEffect, useState } from 'react'
-import { Product } from '../../interfaces/intServices/Product'
+
 import * as productService from '../../services/ProductService'
 import * as customerService from '../../services/CustomerService'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faBox, faBoxesPacking, faPerson } from '@fortawesome/free-solid-svg-icons'
+import { faBox, faBoxesPacking, faPerson, faDollar } from '@fortawesome/free-solid-svg-icons'
 import Dahscards from './Dahscards'
-// import Modal from './Modal';
-// import Modal from 'react-bootstrap/Modal';
+import CardProduct from '../Products/CardProduct'
+import ModalPrecies from './ModalPrecies';
+import Modal from 'react-bootstrap/Modal';
+import Button from 'react-bootstrap/Button';
+
+
 import '../../css/dashboard.css'
 import '../../css/themify-icons.css'
 import '../../css/linearicons.css'
-import ProductOne from '../../img/product/p1.jpg';
-import ProductTwo from '../../img/product/p2.jpg';
-import ProductThree from '../../img/product/p3.jpg';
-import ProductFour from '../../img/product/p4.jpg';
-import ProductFive from '../../img/product/p5.jpg';
-import ProductSix from '../../img/product/p6.jpg';
+import Product1 from '../../img/product/p1.jpg';
 
+
+interface ProductMod {
+    name: String;
+    price: Number;
+    stock: Number;
+    color: String;
+    brand: String;
+    category: String;
+}
+
+interface CustomerMod {
+    name: String
+    specialPrices: String
+}
 
 const Dashboard = () => {
 
-    const [totalProducts, setTotalProducts] = useState<Number>() 
-    const [totalStock, setTotalStock] = useState<Number>()
-    const [totalCustomers, setTotalCustomers] = useState<Number>()
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [ProductsMod, setProductsMod] = useState<ProductMod[]>([])
+    const [ProductsStockMod, setProductsStockMod] = useState<ProductMod[]>([])
+    const [CustomersMod, setCustomersMod] = useState<CustomerMod[]>([])
+    const [totalProducts, setTotalProducts] = useState<Number>(0)
+    const [totalStock, setTotalStock] = useState<Number>(0)
+    const [totalCustomers, setTotalCustomers] = useState<Number>(0)
 
-    const data = [
-        { id: 1, name: 'John', age: 30 },
-        { id: 2, name: 'Jane', age: 25 },
-        { id: 3, name: 'Doe', age: 35 },
-    ];
+    const [showModal, setShowModal] = useState(false);
 
-    const handleOpenModal = () => {
-        setIsModalOpen(true);
-      };
-    
-    const handleCloseModal = () => {
-        setIsModalOpen(false);
-    };
+    const handleClose = () => setShowModal(false);
+    const handleShow = () => setShowModal(true);
 
-    const ProductoCount = async () => {
-        const total = await productService.getTotalProducts()
-        const countTotal = (total).data.length 
+    const ProductsCount = async () => {
+        const res = await productService.getTotalProducts()
+
+        const products = await res.data.map(prod => {
+            return {
+                name: prod.name,
+                description: prod.description,
+                price: prod.price,
+                stock: prod.stock,
+                color: prod.color,
+                brand: prod.brand,
+                category: prod.category
+            }
+        })
+        setProductsMod(products)
+        const countTotal = products.length
         setTotalProducts(countTotal)
-        const productStock =  total.data.filter(prt =>{
+
+        const productStock = await products.filter(prt => {
             return prt.stock != 0
         })
-        const countTotalStock = (productStock).length 
+        setProductsStockMod(productStock)
+        const countTotalStock = (productStock).length
         setTotalStock(countTotalStock)
     }
 
-    const CustomersCount = async () =>{
-        const total = await customerService.getCustomers()
-        const customerTotal = (total).data.length 
+    const CustomersCount = async () => {
+        const res = await customerService.getCustomers()
+        const customers = res.data.map(cust => {
+            return {
+                name: cust.name,
+                specialPrices: (cust.specialPrices.length > 0) ? "YES" : "NO"
+            }
+        })
+
+        setCustomersMod(customers)
+        const customerTotal = customers.length
         setTotalCustomers(customerTotal)
     }
 
     useEffect(() => {
-        ProductoCount()
+        ProductsCount()
         CustomersCount()
-        
-    },)
-
+    }, [])
 
     return (
         <div>
             <div className="banner-initial card container p-5">
                 <div className="px-5">
-                {/* <Modal isOpen={isModalOpen} onClose={handleCloseModal} data={data} /> */}
                     <div className="row">
-                        <button onClick={handleOpenModal}>Abrir Modal</button>
-                        <Dahscards icon={faBox} backgroundColor="sbg1" title="Total Models Products" value={totalProducts}/>
-                        <Dahscards icon={faBoxesPacking} backgroundColor="sbg2" title="Models Products in Stock" value={totalStock} />
-                        <Dahscards icon={faPerson} backgroundColor="sbg3" title="Customers" value={totalCustomers} />
+                        <Dahscards icon={faBox} backgroundColor="sbg1" title="Total Models Products" value={totalProducts} data={ProductsMod} />
+                        <Dahscards icon={faBoxesPacking} backgroundColor="sbg2" title="Models Products in Stock" value={totalStock} data={ProductsStockMod} />
+                        <Dahscards icon={faPerson} backgroundColor="sbg3" title="Customers" value={totalCustomers} data={CustomersMod} />
+                        {/* <Dahscards icon={faDollar} backgroundColor="sbg4" title="See special price " value={0} data={[]} /> */}
+                        <div className="d-flex justify-content-center pt-5">
+                            <Button className="btn btn-success" onClick={handleShow} style={{width:"200px", height:"60px"}}>
+                                <FontAwesomeIcon icon={faDollar} style={{ color: "white" }} />
+                                <span style={{marginLeft:"10px"}}>Special Prices</span>
+                            </Button>
+                            <ModalPrecies title={"Special Prices"} showModal={showModal} handleClose={handleClose}/>
+                        </div>
                     </div>
                 </div>
             </div>
             <div className="row mt-2 p-3">
                 <div className="col-xl-3 col-lg-4 col-md-5 card card-body">
-                <div className="sidebar-filter mt-50">
-					<div className="top-filter-head">Product Filters</div>
-					<div className="common-filter">
-						<div className="head">Brands</div>
-						<form action="#">
-							<ul>
-								<li className="filter-list"><input className="pixel-radio" type="radio" id="apple" name="brand"/><label>Apple<span>(29)</span></label></li>
-								<li className="filter-list"><input className="pixel-radio" type="radio" id="asus" name="brand"/><label>Asus<span>(29)</span></label></li>
-								<li className="filter-list"><input className="pixel-radio" type="radio" id="gionee" name="brand"/><label>Gionee<span>(19)</span></label></li>
-								<li className="filter-list"><input className="pixel-radio" type="radio" id="micromax" name="brand"/><label>Micromax<span>(19)</span></label></li>
-								<li className="filter-list"><input className="pixel-radio" type="radio" id="samsung" name="brand"/><label>Samsung<span>(19)</span></label></li>
-							</ul>
-						</form>
-					</div>
-					<div className="common-filter">
-						<div className="head">Color</div>
-						<form action="#">
-							<ul>
-								<li className="filter-list"><input className="pixel-radio" type="radio" id="black" name="color"/><label>Black<span>(29)</span></label></li>
-								<li className="filter-list"><input className="pixel-radio" type="radio" id="balckleather" name="color"/><label>Black
-										Leather<span>(29)</span></label></li>
-								<li className="filter-list"><input className="pixel-radio" type="radio" id="blackred" name="color"/><label>Black
-										with red<span>(19)</span></label></li>
-								<li className="filter-list"><input className="pixel-radio" type="radio" id="gold" name="color"/><label>Gold<span>(19)</span></label></li>
-								<li className="filter-list"><input className="pixel-radio" type="radio" id="spacegrey" name="color"/><label>Spacegrey<span>(19)</span></label></li>
-							</ul>
-						</form>
-					</div>
-					<div className="common-filter">
-						<div className="head">Price</div>
-						<div className="price-range-area">
-							<div id="price-range"></div>
-							<div className="value-wrapper d-flex">
-								<div className="price">Price:</div>
-								<span>$</span>
-								<div id="lower-value"></div>
-								<div className="to">to</div>
-								<span>$</span>
-								<div id="upper-value"></div>
-							</div>
-						</div>
-					</div>
-				</div>
+                    <div className="sidebar-filter mt-50">
+                        <div className="top-filter-head">Product Filters</div>
+                    </div>
                 </div>
                 <div className="col-xl-9 col-lg-8 col-md-7 px-4 py-3 card card-body">
-                <div className="top-store-section">Product Store</div>
+                    <div className="top-store-section">Product Store</div>
                     <section className="lattest-product-area pb-40 category-list">
                         <div className="row">
-                            <div className="col-lg-4 col-md-6">
-                                <div className="single-product">
-                                    <img className="img-fluid" src={ProductOne} alt=""/>
-                                    <div className="product-details">
-                                        <h6>addidas New Hammer sole
-                                            for Sports person</h6>
-                                        <div className="price">
-                                            <h6>$150.00</h6>
-                                            <h6 className="l-through">$210.00</h6>
-                                        </div>
-                                        <div className="prd-bottom">
-                                            <a href="" className="social-info">
-                                                <span className="ti-bag"></span>
-                                                <p className="hover-text">add to bag</p>
-                                            </a>
-                                            <a href="" className="social-info">
-                                                <span className="lnr lnr-heart"></span>
-                                                <p className="hover-text">Wishlist</p>
-                                            </a>
-                                            <a href="" className="social-info">
-                                                <span className="lnr lnr-sync"></span>
-                                                <p className="hover-text">compare</p>
-                                            </a>
-                                            <a href="" className="social-info">
-                                                <span className="lnr lnr-move"></span>
-                                                <p className="hover-text">view more</p>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="col-lg-4 col-md-6">
-                                <div className="single-product">
-                                    <img className="img-fluid" src={ProductTwo} alt=""/>
-                                    <div className="product-details">
-                                        <h6>addidas New Hammer sole
-                                            for Sports person</h6>
-                                        <div className="price">
-                                            <h6>$150.00</h6>
-                                            <h6 className="l-through">$210.00</h6>
-                                        </div>
-                                        <div className="prd-bottom">
-
-                                            <a href="" className="social-info">
-                                                <span className="ti-bag"></span>
-                                                <p className="hover-text">add to bag</p>
-                                            </a>
-                                            <a href="" className="social-info">
-                                                <span className="lnr lnr-heart"></span>
-                                                <p className="hover-text">Wishlist</p>
-                                            </a>
-                                            <a href="" className="social-info">
-                                                <span className="lnr lnr-sync"></span>
-                                                <p className="hover-text">compare</p>
-                                            </a>
-                                            <a href="" className="social-info">
-                                                <span className="lnr lnr-move"></span>
-                                                <p className="hover-text">view more</p>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="col-lg-4 col-md-6">
-                                <div className="single-product">
-                                    <img className="img-fluid" src={ProductThree} alt=""/>
-                                    <div className="product-details">
-                                        <h6>addidas New Hammer sole
-                                            for Sports person</h6>
-                                        <div className="price">
-                                            <h6>$150.00</h6>
-                                            <h6 className="l-through">$210.00</h6>
-                                        </div>
-                                        <div className="prd-bottom">
-
-                                            <a href="" className="social-info">
-                                                <span className="ti-bag"></span>
-                                                <p className="hover-text">add to bag</p>
-                                            </a>
-                                            <a href="" className="social-info">
-                                                <span className="lnr lnr-heart"></span>
-                                                <p className="hover-text">Wishlist</p>
-                                            </a>
-                                            <a href="" className="social-info">
-                                                <span className="lnr lnr-sync"></span>
-                                                <p className="hover-text">compare</p>
-                                            </a>
-                                            <a href="" className="social-info">
-                                                <span className="lnr lnr-move"></span>
-                                                <p className="hover-text">view more</p>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="col-lg-4 col-md-6">
-                                <div className="single-product">
-                                    <img className="img-fluid" src={ProductFour} alt=""/>
-                                    <div className="product-details">
-                                        <h6>addidas New Hammer sole
-                                            for Sports person</h6>
-                                        <div className="price">
-                                            <h6>$150.00</h6>
-                                            <h6 className="l-through">$210.00</h6>
-                                        </div>
-                                        <div className="prd-bottom">
-
-                                            <a href="" className="social-info">
-                                                <span className="ti-bag"></span>
-                                                <p className="hover-text">add to bag</p>
-                                            </a>
-                                            <a href="" className="social-info">
-                                                <span className="lnr lnr-heart"></span>
-                                                <p className="hover-text">Wishlist</p>
-                                            </a>
-                                            <a href="" className="social-info">
-                                                <span className="lnr lnr-sync"></span>
-                                                <p className="hover-text">compare</p>
-                                            </a>
-                                            <a href="" className="social-info">
-                                                <span className="lnr lnr-move"></span>
-                                                <p className="hover-text">view more</p>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="col-lg-4 col-md-6">
-                                <div className="single-product">
-                                    <img className="img-fluid" src={ProductFive} alt=""/>
-                                    <div className="product-details">
-                                        <h6>addidas New Hammer sole
-                                            for Sports person</h6>
-                                        <div className="price">
-                                            <h6>$150.00</h6>
-                                            <h6 className="l-through">$210.00</h6>
-                                        </div>
-                                        <div className="prd-bottom">
-
-                                            <a href="" className="social-info">
-                                                <span className="ti-bag"></span>
-                                                <p className="hover-text">add to bag</p>
-                                            </a>
-                                            <a href="" className="social-info">
-                                                <span className="lnr lnr-heart"></span>
-                                                <p className="hover-text">Wishlist</p>
-                                            </a>
-                                            <a href="" className="social-info">
-                                                <span className="lnr lnr-sync"></span>
-                                                <p className="hover-text">compare</p>
-                                            </a>
-                                            <a href="" className="social-info">
-                                                <span className="lnr lnr-move"></span>
-                                                <p className="hover-text">view more</p>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="col-lg-4 col-md-6">
-                                <div className="single-product">
-                                    <img className="img-fluid" src={ProductSix} alt=""/>
-                                    <div className="product-details">
-                                        <h6>addidas New Hammer sole
-                                            for Sports person</h6>
-                                        <div className="price">
-                                            <h6>$150.00</h6>
-                                            <h6 className="l-through">$210.00</h6>
-                                        </div>
-                                        <div className="prd-bottom">
-
-                                            <a href="" className="social-info">
-                                                <span className="ti-bag"></span>
-                                                <p className="hover-text">add to bag</p>
-                                            </a>
-                                            <a href="" className="social-info">
-                                                <span className="lnr lnr-heart"></span>
-                                                <p className="hover-text">Wishlist</p>
-                                            </a>
-                                            <a href="" className="social-info">
-                                                <span className="lnr lnr-sync"></span>
-                                                <p className="hover-text">compare</p>
-                                            </a>
-                                            <a href="" className="social-info">
-                                                <span className="lnr lnr-move"></span>
-                                                <p className="hover-text">view more</p>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                        {ProductsMod.map((product) => (
+                            <CardProduct Name={product.name} Brand={product.brand} Precio={product.price} imgProduct={Product1}/>
+                        ))}
                         </div>
                     </section>
                 </div>
@@ -326,7 +131,7 @@ const Dashboard = () => {
                     <p className="small text-muted">Develop & Design by @Yeferson Duarte G</p>
                 </div>
             </footer>
-            
+
         </div>
     )
 }

@@ -31,7 +31,7 @@ const productSchema = new Schema({
         type: Number,
     },
     percentageSpecialPrice:{
-        type: Number,
+        type: String,
     },
     stock:{
         type: Number,

@@ -15,12 +15,12 @@ export const getCustomer = async (id: string) =>{
     return await axios.get(`${API}/customers/${id}`)
 }
 
-export const createCustomer = async (video: Customer) =>{
-    return await axios.post(`${API}/customers`, video)
+export const createCustomer = async (custmer: Customer) =>{
+    return await axios.post(`${API}/customers`, custmer)
 }
 
-export const updateCustomer = async (id: String, video:Customer) =>{
-    return await axios.put<Customer[]>(`${API}/customers/${id}`, video)
+export const updateCustomer = async (id: String, custmer:Customer) =>{
+    return await axios.put<Customer[]>(`${API}/customers/${id}`, custmer)
 }
 
 export const deleteCustomer = async (id: String) =>{

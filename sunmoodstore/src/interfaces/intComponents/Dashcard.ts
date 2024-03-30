@@ -5,4 +5,5 @@ export interface Dashcard {
     backgroundColor: string;
     title: string;
     value?: Number;
+    data: { [key: string]: any }[];
 }
