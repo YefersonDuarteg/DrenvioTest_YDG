@@ -1,6 +1,10 @@
 import axios from 'axios'
 import { Customer } from '../interfaces/intServices/Customer'
-const API = window.location.protocol+'//'+window.location.hostname+':5000'
+
+// const API = window.location.protocol+'//'+window.location.hostname+':5000'
+
+const API = process.env.APP_API_URL != undefined ? process.env.APP_API_URL : 'http://localhost:5000';
+
 
 export const getCustomers = async () =>{ 
     return await axios.get<Customer[]>(`${API}/customers`)
