@@ -1,3 +1,4 @@
+import React from 'react';
 import ReactDOM from 'react-dom/client';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
@@ -14,19 +15,19 @@ const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 root.render(
-  // <React.StrictMode>
-  <BrowserRouter>
-    <Navbar />
-    <div className="img-inital">
-      <div className="container p-4">
-        <Routes>
-          <Route path='/' Component={Dashboard} />
-        </Routes>
-        <ToastContainer />
+  <React.StrictMode>
+    <BrowserRouter>
+      <Navbar />
+      <div className="img-inital">
+        <div className="container p-4">
+          <Routes>
+            <Route path='/' Component={Dashboard} />
+          </Routes>
+          <ToastContainer />
+        </div>
       </div>
-    </div>
-  </BrowserRouter>
-  // </React.StrictMode>
+    </BrowserRouter>
+  </React.StrictMode>
 );
 
 reportWebVitals();
