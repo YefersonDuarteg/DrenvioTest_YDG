@@ -3,7 +3,7 @@
 # dependencies
 /apiRest/node_modules
 /sunmoodstore/node_modules
-/sunmoodstore/src/img
+# /sunmoodstore/src/img
 /sunmoodstore/src/fonts
 /sunmoodstore/node_modules
 
