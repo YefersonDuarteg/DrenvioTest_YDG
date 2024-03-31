@@ -2,7 +2,7 @@ import axios from 'axios'
 import { Product } from '../interfaces/intServices/Product'
 
 // const API = window.location.protocol+'//'+window.location.hostname+':5000'
-const API = process.env.APP_API_URL != undefined ? process.env.APP_API_URL : 'http://localhost:5000';
+const API = process.env.APP_API_URL != undefined ? process.env.APP_API_URL : 'https://drenviotes-backend.onrender.com';
 
 export const getProducts = async () =>{
     return await axios.get<Product[]>(`${API}/products`)
