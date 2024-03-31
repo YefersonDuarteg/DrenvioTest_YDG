@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { Product } from '../interfaces/intServices/Product'
 
-const API = 'http://localhost:5000'
+const API = window.location.protocol+'//'+window.location.hostname+':5000'
 
 export const getProducts = async () =>{
     return await axios.get<Product[]>(`${API}/products`)
