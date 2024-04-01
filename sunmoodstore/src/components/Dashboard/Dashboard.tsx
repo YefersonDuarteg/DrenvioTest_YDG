@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, CSSProperties  } from 'react'
 
 import * as productService from '../../services/ProductService'
 import * as customerService from '../../services/CustomerService'
@@ -9,13 +9,21 @@ import CardProduct from '../Products/CardProduct'
 import ModalPrecies from './ModalPrecies';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
-
+import MoonLoader  from 'react-spinners/MoonLoader';
 
 import '../../css/dashboard.css'
 import '../../css/themify-icons.css'
 import '../../css/linearicons.css'
 import Product1 from '../../img/product/p1.jpg';
 
+const override: CSSProperties = {
+    display: "block",
+    margin: "0 auto",
+    position: "absolute",
+    left: "33%",
+    top: "43%",
+    transform: "translate(-50%, -50)"
+};
 
 interface ProductMod {
     name: String;
@@ -33,6 +41,7 @@ interface CustomerMod {
 
 const Dashboard = () => {
 
+    const [loading, setLoading] = useState<boolean>(false);
     const [ProductsMod, setProductsMod] = useState<ProductMod[]>([])
     const [ProductsStockMod, setProductsStockMod] = useState<ProductMod[]>([])
     const [CustomersMod, setCustomersMod] = useState<CustomerMod[]>([])
@@ -46,6 +55,7 @@ const Dashboard = () => {
     const handleShow = () => setShowModal(true);
 
     const ProductsCount = async () => {
+        setLoading(true);
         const res = await productService.getTotalProducts()
 
         const products = await res.data.map(prod => {
@@ -69,6 +79,7 @@ const Dashboard = () => {
         setProductsStockMod(productStock)
         const countTotalStock = (productStock).length
         setTotalStock(countTotalStock)
+        setLoading(false);
     }
 
     const CustomersCount = async () => {
@@ -92,45 +103,59 @@ const Dashboard = () => {
 
     return (
         <div>
-            <div className="banner-initial card container ps-sm-5">
-                <div className="px-5">
-                    <div className="row">
-                        <Dahscards icon={faBox} backgroundColor="sbg1" title="Total Models Products" value={totalProducts} data={ProductsMod} />
-                        <Dahscards icon={faBoxesPacking} backgroundColor="sbg2" title="Models Products in Stock" value={totalStock} data={ProductsStockMod} />
-                        <Dahscards icon={faPerson} backgroundColor="sbg3" title="Customers" value={totalCustomers} data={CustomersMod} />
-                        {/* <Dahscards icon={faDollar} backgroundColor="sbg4" title="See special price " value={0} data={[]} /> */}
-                        <div className="d-flex justify-content-center pt-5">
-                            <Button className="btn btn-success" onClick={handleShow} style={{width:"200px", height:"60px"}}>
-                                <FontAwesomeIcon icon={faDollar} style={{ color: "white" }} />
-                                <span style={{marginLeft:"10px"}}>Special Prices</span>
-                            </Button>
-                            <ModalPrecies title={"Special Prices"} showModal={showModal} handleClose={handleClose}/>
+            {loading ? (
+                <MoonLoader
+                    color={"#ff9b3d"}
+                    loading={loading}
+                    cssOverride={override}
+                    size={150}
+                    aria-label="Loading Spinner"
+                    data-testid="loader"
+                    speedMultiplier={0.7}
+                />
+            ) : (
+                <div>
+                    <div className="banner-initial card container ps-sm-5">
+                        <div className="px-5">
+                            <div className="row">
+                                <Dahscards icon={faBox} backgroundColor="sbg1" title="Total Models Products" value={totalProducts} data={ProductsMod} />
+                                <Dahscards icon={faBoxesPacking} backgroundColor="sbg2" title="Models Products in Stock" value={totalStock} data={ProductsStockMod} />
+                                <Dahscards icon={faPerson} backgroundColor="sbg3" title="Customers" value={totalCustomers} data={CustomersMod} />
+                                {/* <Dahscards icon={faDollar} backgroundColor="sbg4" title="See special price " value={0} data={[]} /> */}
+                                <div className="d-flex justify-content-center pt-5">
+                                    <Button className="btn btn-success" onClick={handleShow} style={{ width: "200px", height: "60px" }}>
+                                        <FontAwesomeIcon icon={faDollar} style={{ color: "white" }} />
+                                        <span style={{ marginLeft: "10px" }}>Special Prices</span>
+                                    </Button>
+                                    <ModalPrecies title={"Special Prices"} showModal={showModal} handleClose={handleClose} />
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
-            <div className="row mt-2 p-3">
-                <div className="col-xl-3 col-lg-4 col-md-5 card card-body">
-                    <div className="sidebar-filter mt-50">
-                        <div className="top-filter-head">Product Filters</div>
-                    </div>
-                </div>
-                <div className="col-xl-9 col-lg-8 col-md-7 px-4 py-3 card card-body">
-                    <div className="top-store-section">Product Store</div>
-                    <section className="lattest-product-area pb-40 category-list">
-                        <div className="row">
-                        {ProductsMod.map((product) => (
-                            <CardProduct Name={product.name} Brand={product.brand} Precio={product.price} imgProduct={Product1}/>
-                        ))}
+                    <div className="row mt-2 p-3">
+                        <div className="col-xl-3 col-lg-4 col-md-5 card card-body">
+                            <div className="sidebar-filter mt-50">
+                                <div className="top-filter-head">Product Filters</div>
+                            </div>
                         </div>
-                    </section>
+                        <div className="col-xl-9 col-lg-8 col-md-7 px-4 py-3 card card-body">
+                            <div className="top-store-section">Product Store</div>
+                            <section className="lattest-product-area pb-40 category-list">
+                                <div className="row">
+                                    {ProductsMod.map((product) => (
+                                        <CardProduct Name={product.name} Brand={product.brand} Precio={product.price} imgProduct={Product1} />
+                                    ))}
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+                    <footer className="footer fixed-bottom">
+                        <div className="row text-center p-3">
+                            <p className="small text-muted">Develop & Design by @Yeferson Duarte G</p>
+                        </div>
+                    </footer>
                 </div>
-            </div>
-            <footer className="footer fixed-bottom">
-                <div className="row text-center p-3">
-                    <p className="small text-muted">Develop & Design by @Yeferson Duarte G</p>
-                </div>
-            </footer>
+            )}
 
         </div>
     )

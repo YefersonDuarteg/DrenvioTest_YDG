@@ -320,5 +320,6 @@ ul {
 
 .img-inital{
     background: url(../img/banner/fondo.jpg);
+    min-height: 89vh;
     
 }
