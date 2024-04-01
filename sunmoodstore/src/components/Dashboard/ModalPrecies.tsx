@@ -39,7 +39,7 @@ function ModalPricies({title, showModal, handleClose }: ModalProps) {
     const [CustomerSelect, setCustomerSelect] = useState<DropDown | null>(null)
     const [ProductSpecial, setProductSpecial] = useState<ProductMod[]>([])
     const [loading, setLoading] = useState<boolean>(false);
-    const [showDiv, setShowDiv] = useState(false);
+    const [noShowDiv, setNoShowDiv] = useState(true);
 
     const ProductsCount = async () => {
         const res = await productService.getProducts()
@@ -105,7 +105,7 @@ function ModalPricies({title, showModal, handleClose }: ModalProps) {
     const contieneCampoNulo = (products: ProductMod[])  => {
         for (const prod of products) {
             const findNull = Object.values(prod).some((element) => element == null)
-            setShowDiv(findNull)
+            setNoShowDiv(findNull)
         }
     };
 
@@ -135,7 +135,7 @@ function ModalPricies({title, showModal, handleClose }: ModalProps) {
                         <span style={{marginLeft:"10px"}}>Verificar</span>
                     </Button>
 
-                    {!showDiv && (
+                    {!noShowDiv && (
                         <div className="alert alert-info mt-4" role="alert">
                             The user has a special discount for this product!
                         </div>
