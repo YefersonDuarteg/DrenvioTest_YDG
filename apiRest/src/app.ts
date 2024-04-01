@@ -33,8 +33,4 @@ app.use((error: any, req: any, res: any, next: any) => {
     });
 })
 
-// app.listen(app.get('port'), ()=>{
-//     console.log('server on port', app.get('port'))
-// })
-
 export default app

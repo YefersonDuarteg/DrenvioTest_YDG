@@ -39,6 +39,7 @@ function ModalPricies({title, showModal, handleClose }: ModalProps) {
     const [CustomerSelect, setCustomerSelect] = useState<DropDown | null>(null)
     const [ProductSpecial, setProductSpecial] = useState<ProductMod[]>([])
     const [loading, setLoading] = useState<boolean>(false);
+    const [showDiv, setShowDiv] = useState(false);
 
     const ProductsCount = async () => {
         const res = await productService.getProducts()
@@ -95,10 +96,18 @@ function ModalPricies({title, showModal, handleClose }: ModalProps) {
                     }
                 })
                 setProductSpecial(product)
+                contieneCampoNulo(product)
                 setLoading(false);
             }
         }
     }
+
+    const contieneCampoNulo = (products: ProductMod[])  => {
+        for (const prod of products) {
+            const findNull = Object.values(prod).some((element) => element == null)
+            setShowDiv(findNull)
+        }
+    };
 
     useEffect(() => {
         ProductsCount()
@@ -125,9 +134,15 @@ function ModalPricies({title, showModal, handleClose }: ModalProps) {
                         <FontAwesomeIcon icon={faSearch} style={{ color: "white" }} />
                         <span style={{marginLeft:"10px"}}>Verificar</span>
                     </Button>
+
+                    {!showDiv && (
+                        <div className="alert alert-info mt-4" role="alert">
+                            The user has a special discount for this product!
+                        </div>
+                    )}       
                     {loading ? (
                         <p>Cargando...</p>
-                    ) : (            
+                    ) : (     
                         <Table striped bordered hover style={{marginTop:"20px"}}>
                             <thead>
                                 <tr>
@@ -140,7 +155,7 @@ function ModalPricies({title, showModal, handleClose }: ModalProps) {
                                 {ProductSpecial.map((item, index) => (
                                     <tr key={index}>
                                         {Object.values(item).map((value, index) => (
-                                            <td key={index}>{value}</td>
+                                            <td key={index} className={index>6?'text-primary':''}>{value}</td>
                                         ))}
                                     </tr>
                                 ))}

@@ -29,6 +29,5 @@ export const deleteProduct = async (id: String) =>{
 }
 
 export const getProductSpecialPrecie = async (id: String, name: String) =>{
-    console.log(`${API}/price/${id}/${name}`)
     return await axios.get(`${API}/price/${id}/${name}`)
 }

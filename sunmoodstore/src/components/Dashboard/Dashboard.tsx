@@ -92,7 +92,7 @@ const Dashboard = () => {
 
     return (
         <div>
-            <div className="banner-initial card container p-5">
+            <div className="banner-initial card container ps-sm-5">
                 <div className="px-5">
                     <div className="row">
                         <Dahscards icon={faBox} backgroundColor="sbg1" title="Total Models Products" value={totalProducts} data={ProductsMod} />
