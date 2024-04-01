@@ -7,7 +7,6 @@ import { faBox, faBoxesPacking, faPerson, faDollar } from '@fortawesome/free-sol
 import Dahscards from './Dahscards'
 import CardProduct from '../Products/CardProduct'
 import ModalPrecies from './ModalPrecies';
-import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import MoonLoader  from 'react-spinners/MoonLoader';
 
@@ -115,7 +114,7 @@ const Dashboard = () => {
                 />
             ) : (
                 <div>
-                    <div className="banner-initial card container ps-sm-5">
+                    <div className="banner-initial card container p-sm-5">
                         <div className="px-5">
                             <div className="row">
                                 <Dahscards icon={faBox} backgroundColor="sbg1" title="Total Models Products" value={totalProducts} data={ProductsMod} />

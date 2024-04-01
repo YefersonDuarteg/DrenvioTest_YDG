@@ -29,7 +29,7 @@ const Dahscards = ({ icon, backgroundColor, title, value, data }: Dashcard) => {
                     <div className="btntext-box">
                         <Button className="btn btn-animate" onClick={handleShow}>
                             <FontAwesomeIcon icon={faEye} style={{ color: "white" }} />
-                            <span style={{marginLeft:"10px"}}>Ver</span>
+                            <span style={{marginLeft:"10px"}}>View</span>
                         </Button>
                     </div>
                 </div>

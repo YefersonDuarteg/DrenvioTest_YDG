@@ -7,6 +7,7 @@ import * as productService from '../../services/ProductService'
 import * as customerService from '../../services/CustomerService'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSearch} from '@fortawesome/free-solid-svg-icons'
+import PropagateLoader  from 'react-spinners/PropagateLoader';
 
 interface ModalProps {
     title: String;
@@ -123,16 +124,16 @@ function ModalPricies({title, showModal, handleClose }: ModalProps) {
                 </Modal.Header>
                 <Modal.Body>
                     <div className='mb-3'>
-                        <label className='mb-2'>Clientes</label>
-                        <Select options={Customers} defaultValue={CustomerSelect} onChange={handleChangeCustomer}/>
+                        <label className='mb-2'>Customers</label>
+                        <Select options={Customers} defaultValue={CustomerSelect} onChange={handleChangeCustomer} required/>
                     </div>
                     <div className='mb-3'>
-                        <label className='mb-2'>Productos</label>
-                        <Select options={Products} defaultValue={ProductSelect} onChange={handleChangeProduct} />
+                        <label className='mb-2'>Products</label>
+                        <Select options={Products} defaultValue={ProductSelect} onChange={handleChangeProduct} required/>
                     </div>
                     <Button className="btn btn-animate" onClick={getProductsSpecialPrecie}>
                         <FontAwesomeIcon icon={faSearch} style={{ color: "white" }} />
-                        <span style={{marginLeft:"10px"}}>Verificar</span>
+                        <span style={{marginLeft:"10px"}}>Verify</span>
                     </Button>
 
                     {!noShowDiv && (
@@ -141,7 +142,13 @@ function ModalPricies({title, showModal, handleClose }: ModalProps) {
                         </div>
                     )}       
                     {loading ? (
-                        <p>Cargando...</p>
+                        <div>
+                            <br/>
+
+                            <PropagateLoader color="#4657ff" loading={loading} cssOverride={{marginLeft:"50px"}}/>
+                            <br/>
+                            {/* <p>Cargando...</p> */}
+                        </div>
                     ) : (     
                         <Table striped bordered hover style={{marginTop:"20px"}}>
                             <thead>
